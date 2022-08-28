@@ -1,12 +1,13 @@
-- hosts: regru-test
+- hosts: "{{ variable_host }}"
   vars:
+    admin_user: "{{ admin_user }}"
     sudoers:
-      - chimera
+      - "{{ admin_user }}"
 
   tasks:
     - name: Setting up admin user (1/4)
       user:
-        name: chimera
+        name: "{{ admin_user }}"
         state: present
 
     - name: Setting up admin user (2/4)
