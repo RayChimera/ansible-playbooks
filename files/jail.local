@@ -1,0 +1,43 @@
+#
+# JAILS
+#
+
+#
+# SSH servers
+#
+
+[sshd]
+
+# To use more aggressive sshd modes set filter parameter "mode" in jail.local:
+# normal (default), ddos, extra or aggressive (combines all).
+# See "tests/files/logs/sshd" or "filter.d/sshd.conf" for usage example and details.
+mode    = normal
+port    = ssh
+logpath = %(sshd_log)s
+backend = %(sshd_backend)s
+# input by stefan
+# one day
+findtime = 5400 ;1.5 hours
+maxretry = 5
+bantime = 86400 ;1 day
+
+# input by stefan, longterm ban
+# 30 attempts over 3 days result in a 1 week ban
+[sshlongterm2]
+port      = ssh
+logpath   = %(sshd_log)s
+banaction = iptables-multiport
+findtime  = 259200 ;3 days
+maxretry  = 10
+bantime   = 604800 ;1 week
+enabled   = true
+filter    = sshd
+
+[sshlongterm3]
+enabled = true
+filter = sshd
+findtime = 15552000 ;6 months
+maxretry = 15
+bantime = 2592000 ;1 month
+logpath   = %(sshd_log)s
+banaction = iptables-multiport
