@@ -5,17 +5,17 @@
       - "{{ admin_user }}"
 
   tasks:
-    - name: Setting up admin user (1/4)
+    - name: Setting up admin user (1/5)
       user:
         name: "{{ admin_user }}"
         state: present
 
-    - name: Setting up admin user (2/4)
+    - name: Setting up admin user (2/5)
       group:
         name: wheel
         state: present
 
-    - name: Setting up admin user (3/4)
+    - name: Setting up admin user (3/5)
       lineinfile:
         dest: /etc/sudoers
         state: present
@@ -23,12 +23,18 @@
         line: '%wheel ALL=(ALL) NOPASSWD: ALL'
         validate: visudo -cf %s
 
-    - name: Setting up admin user (4/4)
+    - name: Setting up admin user (4/5)
       user:
         name: "{{ item }}"
         groups: wheel
         append: yes
       with_items: "{{ sudoers }}"
+
+    - name: Setting up admin user (5/5)
+      authorized_key:
+        user: "{{ admin_user }}"
+        state: present
+        key: "{{ lookup('file','files/public_key')}}"
 
     - name: Setting up ssh daemon properly (1/2)
       copy:
